@@ -72,3 +72,24 @@ func (header Headers) Get(key string) (string, bool){
 	value, exists := header[key]
 	return value, exists
 }
+
+func (header *Headers) Override(key string, value string){
+	key = strings.ToLower(key)
+	(*header)[key] = value
+}
+
+func (header *Headers) Add(key string, values ...string){
+	key = strings.ToLower(key)
+	combined := strings.Join(values, ", ")
+	existing, exists := (*header)[key]
+	if exists && existing != "" {
+		(*header)[key] = fmt.Sprintf("%s, %s", existing, combined)
+	}else{
+		(*header)[key] = combined
+	}
+}
+
+func (header *Headers) Remove(key string){
+	key = strings.ToLower(key)
+	delete(*header, key)
+}

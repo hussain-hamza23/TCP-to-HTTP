@@ -60,6 +60,9 @@ func RequestFromReader(reader io.Reader) (*Request, error){
 		}
 
 		if bytesParsed == 0 {
+			if req.State == done{
+				break
+			}
 			// If no bytes were parsed, we need to read more data
 			//read into buffer starting from the last read position
 			bytesRead, err := reader.Read(buffer[idxRead:])
@@ -160,7 +163,7 @@ func parseRequestLine(line string) (*RequestLine, error) {
 }
 
 func (req *Request) parseBody(data []byte) (int, error){
-	lengthStr, exists := req.Headers.Get("content-length") 
+	lengthStr, exists := req.Headers.Get("Content-Length") 
 	if !exists{
 		req.State = done
 		return len(data), nil
